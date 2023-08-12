@@ -11,3 +11,5 @@ struct PCB {
     enum ProcessState p_state;
     struct PCB* next;
 };
+
+struct PCB* new_pcb();

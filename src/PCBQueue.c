@@ -8,14 +8,18 @@ struct PCBQueue {
     struct PCB* last;
 };
 
-struct PCBQueue* new_queue(struct PCB* head) {
+struct PCBQueue* new_queue() {
     struct PCBQueue* q;
-    q->head = head;
-    q->last = head;
+    q->head = NULL;
+    q->last = NULL;
     return q;
 }
 
 struct PCBQueue* add_to_queue(struct PCBQueue* q, struct PCB* p) {
+    if(q->head == NULL) {
+        q->head = p;
+        q->last = p;
+    }
     //  re-factor to insert based on scheduling policy
     q->last->next = p; 
     q->last = p;

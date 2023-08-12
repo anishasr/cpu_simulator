@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "stdio.h": "c",
-        "pcb.h": "c"
+        "pcb.h": "c",
+        "pcbqueue.h": "c"
     }
 }
