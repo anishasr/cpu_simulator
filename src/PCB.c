@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 enum ProcessState {
     NEW,
@@ -20,10 +21,12 @@ int generate_pid() {
 }
 
 struct PCB* new_pcb() {
-    struct PCB* p;
-    p->pid = generate_pid();
-    p->p_state = NEW;
-    p->next = NULL;
+    struct PCB* p = malloc(sizeof(struct PCB));
+    if (p != NULL) {
+        p->pid = generate_pid();
+        p->p_state = NEW;
+        p->next = NULL;
+    }
     return p;
 };
 

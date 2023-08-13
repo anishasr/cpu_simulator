@@ -1,3 +1,8 @@
+#ifndef PCB_H
+#define PCB_H
+
+#include <stdlib.h>
+
 enum ProcessState {
     NEW,
     READY,
@@ -12,4 +17,19 @@ struct PCB {
     struct PCB* next;
 };
 
-struct PCB* new_pcb();
+// struct PCB* new_pcb();
+
+int generate_pid() {
+    static int last_val = 0;
+    return last_val++;
+}
+
+struct PCB* new_pcb() {
+    struct PCB* p = malloc(sizeof(struct PCB));;
+    p->pid = generate_pid();
+    p->p_state = NEW;
+    p->next = NULL;
+    return p;
+};
+
+#endif

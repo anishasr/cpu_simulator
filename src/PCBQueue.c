@@ -1,6 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "../headers/PCB.h"
-#include "../headers/PCBQueue.h"
 
 struct PCBQueue {
     // linked list
@@ -9,13 +9,15 @@ struct PCBQueue {
 };
 
 struct PCBQueue* new_queue() {
-    struct PCBQueue* q;
-    q->head = NULL;
-    q->last = NULL;
+    struct PCBQueue* q = malloc(sizeof(struct PCBQueue));
+    if (q != NULL) {
+        q->head = NULL;
+        q->last = NULL;
+    }
     return q;
 }
 
-struct PCBQueue* add_to_queue(struct PCBQueue* q, struct PCB* p) {
+void add_to_queue(struct PCBQueue* q, struct PCB* p) {
     if(q->head == NULL) {
         q->head = p;
         q->last = p;
