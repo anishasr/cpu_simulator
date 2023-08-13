@@ -13,9 +13,16 @@ struct PCB {
     int pid; 
     enum ProcessState p_state;
     struct PCB* next;
+
+    // attributes for scheduling
+    int burst_time;
 };
 
-int generate_pid() {
+int gen_burst_time() {
+    return (rand() % 10) + 1;
+}
+
+int gen_pid() {
     static int last_val = 0;
     return last_val++;
 }
@@ -23,7 +30,8 @@ int generate_pid() {
 struct PCB* new_pcb() {
     struct PCB* p = malloc(sizeof(struct PCB));
     if (p != NULL) {
-        p->pid = generate_pid();
+        p->pid = gen_pid();
+        p->burst_time = gen_burst_time();
         p->p_state = NEW;
         p->next = NULL;
     }
@@ -33,4 +41,6 @@ struct PCB* new_pcb() {
 
 /* Sources:
 https://www.geeksforgeeks.org/static-variables-in-c/
+https://www.tutorialspoint.com/c_standard_library/c_function_rand.htm
+https://stackoverflow.com/questions/3876635/how-to-randomly-print-1-to-10-in-c
 */ 

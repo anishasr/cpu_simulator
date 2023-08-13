@@ -15,20 +15,30 @@ struct PCB {
     int pid; 
     enum ProcessState p_state;
     struct PCB* next;
+
+    // attributes for scheduling
+    int burst_time;
 };
 
 // struct PCB* new_pcb();
 
-int generate_pid() {
+int gen_burst_time() {
+    return (rand() % 10) + 1;
+}
+
+int gen_pid() {
     static int last_val = 0;
     return last_val++;
 }
 
 struct PCB* new_pcb() {
-    struct PCB* p = malloc(sizeof(struct PCB));;
-    p->pid = generate_pid();
-    p->p_state = NEW;
-    p->next = NULL;
+    struct PCB* p = malloc(sizeof(struct PCB));
+    if (p != NULL) {
+        p->pid = gen_pid();
+        p->burst_time = gen_burst_time();
+        p->p_state = NEW;
+        p->next = NULL;
+    }
     return p;
 };
 
