@@ -48,6 +48,40 @@ int size(struct BinaryHeap* bh) {
     return count;
 }
 
+void perc_down(struct BinaryHeap* bh) {
+    // start at root
+    int i = 0;
+    int bh_size = size(bh);
+    struct PCB* temp;
+    struct PCB* sc;
+    int sc_i;
+    while(i < bh_size) {
+        int lc_i = (i * 2) + 1;
+        int rc_i = (i * 2) + 2;
+        
+        if(bh->pcbs[lc_i] != NULL) {
+            // find smaller child to swap with
+            if(bh->pcbs[rc_i] == NULL) {
+                sc = bh->pcbs[lc_i];
+                sc_i = lc_i;
+            } else if(bh->pcbs[lc_i]->burst_time < bh->pcbs[rc_i]->burst_time) {
+                sc_i = lc_i;
+                sc = bh->pcbs[lc_i];
+            } else {
+                sc_i = rc_i;
+            }
+
+            if(sc->burst_time < bh->pcbs[i]->burst_time) {
+                temp = bh->pcbs[i];
+                bh->pcbs[i] = sc;
+                bh->pcbs[sc_i] = temp;
+            }
+        }
+        // compare to next lc and rc
+        i++;
+    }
+}
+
 void perc_up(struct BinaryHeap* bh, int i) {
     // if i = 0, that means only 1 element in heap (root)
     while(i>0) {
@@ -98,18 +132,29 @@ void display_heap(struct BinaryHeap* bh) {
     printf("\n");
 }
 
-void delete(struct PCB* p) {
-
+void delete_min(struct BinaryHeap* pq) {
+    // replace root with most recently added process
+    int last_index = size(pq)-1;
+    struct PCB* temp_root = pq->pcbs[last_index];
+    // pq->pcbs[0] = temp_root;
+    pq->pcbs[0]->pid = temp_root->pid;
+    pq->pcbs[0]->burst_time = temp_root->burst_time;
+    pq->pcbs[0]->p_state = temp_root->p_state;
+    // should 'next' be nullified when process leaves the ready queue?
+    pq->pcbs[0]->next = temp_root->next;
+    pq->pcbs[last_index] = NULL;
+    // percolate down to preserve heap order
+    perc_down(pq);
 }
 
 struct PCB* get_min(struct BinaryHeap* pq) {
     return pq->pcbs[0];
 }
 
-struct PCB* selct_next_process(struct BinaryHeap* pq) {
+struct PCB* select_next_process(struct BinaryHeap* pq) {
     struct PCB* next_process = get_min(pq);
     // remove process at root because it will be executed by CPU
-    delete(next_process);
+    delete_min(pq);
     return next_process;
 }
 
@@ -149,4 +194,12 @@ int main() {
     // printf("%d\n",bh->pcbs[3]->burst_time);
     // printf("%d\n",bh->pcbs[4]->burst_time);
     display_heap(bh);
+
+    delete_min(bh);
+
+    printf("%d",size(bh));
+    printf("%d\n",bh->pcbs[0]->burst_time);
+    printf("%d\n",bh->pcbs[1]->burst_time);
+    printf("%d\n",bh->pcbs[2]->burst_time);
+    printf("%d\n",bh->pcbs[3]->burst_time);
 }
