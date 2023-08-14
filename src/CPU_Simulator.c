@@ -1,29 +1,31 @@
 #include <stdio.h>
+#include <unistd.h>
+// for windows
+// #include<windows.h>
 #include "../headers/PCB.h"
 #include "../headers/PCBQueue.h"
+#include "../headers/Scheduler.h"
 
-void run_scheduler(char algorithm, struct PCBQueue* q) {
-    struct PCB* next_process;
-    if(algorithm == '1') {
-        next_process = sjf(q);
-    } else if(algorithm == '2') {
-        next_process = ljf(q);
-    } else if(algorithm == '3') {
-        next_process = npps(q);
-    } else if(algorithm == '4') {
-        next_process = rrs(q);
-    } else if(algorithm == '5') {
-        next_process = strf(q);
-    } else if(algorithm == '6') {
-        next_process = ltrf(q);
-    }
+void move_next_process(struct Scheduler* scheduler, struct PCBQueue* q, int a) {
+    struct PCB* p = q->head;
+    q->head = q->head->next;
+    // send p to scheduler
+    receive_process(scheduler,p,a);
+}
+
+void schedule_process(struct Scheduler* scheduler) {
+    struct PCB* pcb = select_next_process(scheduler->pq);
 }
 
 int main() {
+    // set up structures neede for simulation
     struct PCBQueue* q = new_queue();
+    struct Scheduler* scheduler = new_scheduler();
 
     for(int i=0;i<10;i++) {
         struct PCB* p = new_pcb();
+        // set process state to ready for simulation
+        p->p_state = READY;
         add_to_queue(q,p);
     }
 
@@ -35,11 +37,14 @@ int main() {
         current = current->next;
     }
 
-    printf("Which scheduling algorithm would you like to use? (1) to Shortest Job First, (2) Longest Job First, (3) Priority Scheduling, (4) Round Robin, (5) Shortest Remaining Time, (6) Longest Remaining Time:\n");
-    char a = getchar();
+    printf("Pick a scheduling algorithm: (1) First Come First Serve (2) Shortest Job First, (3) Longest Job First, (4) Priority Scheduling, (5) Round Robin, (6) Shortest Remaining Time, (7) Longest Remaining Time:\n");
+    // char a = getchar();
+    char a = '1';
 
-    if(a != NULL) {
-        run_scheduler(a, q);
+    // begin sending process to scheduler's priority queue
+    for(int i=0;i<10;i++) {
+        move_next_process(scheduler,q,a);
+        // sleep(1);
     }
     
     return 0;

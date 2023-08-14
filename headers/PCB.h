@@ -23,11 +23,11 @@ struct PCB {
 // struct PCB* new_pcb();
 
 int gen_burst_time() {
-    return (rand() % 10) + 1;
+    return (rand() % 20) + 1;
 }
 
 int gen_pid() {
-    static int last_val = 0;
+    static int last_val = 1;
     return last_val++;
 }
 

@@ -151,6 +151,18 @@ struct PCB* get_min(struct BinaryHeap* pq) {
     return pq->pcbs[0];
 }
 
+void schedule_process(struct Scheduler* scheduler, struct PCB* p, int algorithm) {
+    // insert process based algorithm
+    if(algorithm == '1') {
+        sjf_insert(scheduler->pq,p);
+    // } else if(algorithm == '2') {
+    //     ljf_insert(p);
+    // } else if(algorithm == '3') {
+    //     npps_insert(p);
+    // } 
+    }
+}
+
 struct PCB* select_next_process(struct BinaryHeap* pq) {
     struct PCB* next_process = get_min(pq);
     // remove process at root because it will be executed by CPU
