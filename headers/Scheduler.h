@@ -143,6 +143,7 @@ void delete_min(struct BinaryHeap* pq) {
     // should 'next' be nullified when process leaves the ready queue?
     pq->pcbs[0]->next = temp_root->next;
     pq->pcbs[last_index] = NULL;
+    
     // percolate down to preserve heap order
     perc_down(pq);
 }
@@ -165,7 +166,13 @@ void schedule_process(struct Scheduler* scheduler, struct PCB* p, int algorithm)
 
 struct PCB* select_next_process(struct BinaryHeap* pq) {
     struct PCB* next_process = get_min(pq);
+    struct PCB* next_cp = new_pcb();
+    // bug fix - copy values to new pcb instead of returning pointer to root
+    next_cp->pid = next_process->pid;
+    next_cp->burst_time = next_process->burst_time;
+    next_cp->p_state = next_process->p_state;
+    next_cp->next = NULL;
     // remove process at root because it will be executed by CPU
     delete_min(pq);
-    return next_process;
+    return next_cp;
 }

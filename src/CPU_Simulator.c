@@ -14,8 +14,9 @@ void move_next_process(struct Scheduler* scheduler, struct PCBQueue* q, int a) {
 }
 
 // retrieve next process from the Scheduler
-void retrieve_process(struct Scheduler* scheduler) {
+struct PCB* retrieve_process(struct Scheduler* scheduler) {
     struct PCB* pcb = select_next_process(scheduler->pq);
+    return pcb;
 }
 
 int main() {
@@ -45,6 +46,21 @@ int main() {
     // begin sending process to scheduler's priority queue
     for(int i=0;i<10;i++) {
         move_next_process(scheduler,q,a);
+        // sleep(1);
+    }
+
+    // begin executing processes
+    struct PCB* p_next;
+    for(int i=0;i<10;i++) {
+        p_next = retrieve_process(scheduler);
+        if(p_next!=NULL) {
+            printf("\nCPU is executing Process %d\n", p_next->pid);
+            while(p_next->burst_time > 0) {
+                p_next->burst_time-=1;
+                printf("Time remaining %d\n", p_next->burst_time);
+                // printf("%d\n", p_next->burst_time);
+            }
+        }
         // sleep(1);
     }
     
