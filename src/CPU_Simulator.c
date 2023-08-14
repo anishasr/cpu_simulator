@@ -10,10 +10,11 @@ void move_next_process(struct Scheduler* scheduler, struct PCBQueue* q, int a) {
     struct PCB* p = q->head;
     q->head = q->head->next;
     // send p to scheduler
-    receive_process(scheduler,p,a);
+    schedule_process(scheduler,p,a);
 }
 
-void schedule_process(struct Scheduler* scheduler) {
+// retrieve next process from the Scheduler
+void retrieve_process(struct Scheduler* scheduler) {
     struct PCB* pcb = select_next_process(scheduler->pq);
 }
 
