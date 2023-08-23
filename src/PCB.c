@@ -1,4 +1,6 @@
-#include <stdio.h>
+#ifndef PCB_H
+#define PCB_H
+
 #include <stdlib.h>
 
 enum ProcessState {
@@ -14,9 +16,26 @@ struct PCB {
     enum ProcessState p_state;
     struct PCB* next;
 
-    // attributes for scheduling
+    // attributes for scheduling algorithms
     int burst_time;
+    int priority;
+
+    // attributes for scheduling metrics
+    int arrival_time;
+    int completion_time;
+    int wait_time;
+    int turnaround_time; 
+    int response_time; 
+
 };
+
+// ADD I/O times to make comparison of algorithms clearer
+
+// struct PCB* new_pcb();
+
+int gen_priority() {
+    return (rand() % 20) + 1;
+}
 
 int gen_burst_time() {
     return (rand() % 20) + 1;
@@ -32,11 +51,18 @@ struct PCB* new_pcb() {
     if (p != NULL) {
         p->pid = gen_pid();
         p->burst_time = gen_burst_time();
+        p->priority = gen_priority();
         p->p_state = NEW;
         p->next = NULL;
+        p->arrival_time = 0;
+        p->wait_time = 0;
+        p->turnaround_time= 0;
+        p->response_time = 0;
     }
     return p;
 };
+
+#endif
 
 
 /* Sources:
